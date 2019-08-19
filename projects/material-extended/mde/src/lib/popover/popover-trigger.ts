@@ -54,6 +54,8 @@ export class MdePopoverTrigger implements AfterViewInit, OnDestroy { // tslint:d
     private _positionSubscription: Subscription;
 
     private _mouseoverTimer: any;
+  
+    private _isDoubleClick : boolean = false;
 
     // tracking input type is necessary so it's possible to only auto-focus
     // the first item of the list when the popover is opened via the keyboard
@@ -190,8 +192,17 @@ export class MdePopoverTrigger implements AfterViewInit, OnDestroy { // tslint:d
       if (this.popover.triggerEvent === 'click') {
           // this.popover.setCurrentStyles();
           // this._setCurrentConfig();
-          this.togglePopover();
+          settimeout(() => {
+            if(this._isDoubleClick){
+              this.togglePopover(); 
+              this._isDoubleClick = false;
+            }
+          }, 500);          
       }
+    }
+  
+    @HostListener('dblclick', ['$event']) onDblClick(event: MouseEvent): void {
+      this._isDoubleClick = true;
     }
 
     @HostListener('mouseenter', ['$event']) onMouseEnter(event: MouseEvent): void {
